@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Valkir.Poc.PayU.Web", "Valkir.Poc.PayU.Web\Valkir.Poc.PayU.Web.csproj", "{3BAD0C05-4E8B-479B-89A1-0D863DA8CABC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Valkir.Poc.PayU.Contracts", "Valkir.Poc.PayU.Contracts\Valkir.Poc.PayU.Contracts.csproj", "{04D97CB8-AF1E-471D-8615-FF5C4BCB5185}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Valkir.Poc.PayU.Implementation", "Valkir.Poc.PayU.Implementation\Valkir.Poc.PayU.Implementation.csproj", "{4BB6CCBF-9EDF-47F5-B630-FC89C431A9FF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3BAD0C05-4E8B-479B-89A1-0D863DA8CABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BAD0C05-4E8B-479B-89A1-0D863DA8CABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BAD0C05-4E8B-479B-89A1-0D863DA8CABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BAD0C05-4E8B-479B-89A1-0D863DA8CABC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04D97CB8-AF1E-471D-8615-FF5C4BCB5185}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04D97CB8-AF1E-471D-8615-FF5C4BCB5185}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04D97CB8-AF1E-471D-8615-FF5C4BCB5185}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04D97CB8-AF1E-471D-8615-FF5C4BCB5185}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BB6CCBF-9EDF-47F5-B630-FC89C431A9FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BB6CCBF-9EDF-47F5-B630-FC89C431A9FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BB6CCBF-9EDF-47F5-B630-FC89C431A9FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BB6CCBF-9EDF-47F5-B630-FC89C431A9FF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

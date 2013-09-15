@@ -1,0 +1,83 @@
+﻿@model Valkir.Poc.PayU.Web.Models.Payment
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="span6 center">
+        @*@Html.BeginForm(null, null, FormMethod.Post, new { @action = "https://www.platnosci.pl/paygw/ISO/NewPayment" })*@
+        @using (Html.BeginForm("payment", "home", FormMethod.Post, new { @class = "form-horizontal bs-docs-example" }))
+          {
+            <fieldset>
+                <legend>Płatność PayU</legend>
+                <div class="control-group">
+                    @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(m => m.FirstName)
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(m => m.LastName, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(m => m.LastName)
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(m => m.Email)
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(m => m.ClientIp, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(m => m.ClientIp)
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(m => m.PosId, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(m => m.PosId)
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(m => m.PosAuthKey, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(m => m.PosAuthKey)
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(m => m.SessionId, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(m => m.SessionId)
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(m => m.OrderId, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(m => m.OrderId)
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(m => m.Description, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(m => m.Description)
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(m => m.Amount, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(m => m.Amount)
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <button type="submit" class="btn btn-primary">Wykonaj płatność</button>
+                    </div>
+                </div>
+            </fieldset>
+          }
+    </div>
+</div>
