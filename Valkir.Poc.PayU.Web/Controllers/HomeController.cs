@@ -145,7 +145,7 @@ namespace Valkir.Poc.PayU.Web.Controllers
                                                                                                 "session_id",
                                                                                                 report.session_id
                                                                                             },
-                                                                                            {"ts", report.ts},
+                                                                                            {"ts", 20.ToString()},
                                                                                             {"sig", report.sig},
                                                                                         });
 
