@@ -125,7 +125,41 @@ namespace Valkir.Poc.PayU.Web.Controllers
 
         public void Report(PayUReport report)
         {
-            Response.Write("OK");
+            try
+            {
+                var result = "";
+                using (WebClient client = new WebClient())
+                {
+
+                    byte[] response = client.UploadValues(_payUUrl + "Payment/get", new NameValueCollection()
+                                                                                        {
+                                                                                            {
+                                                                                                "pos_id",
+                                                                                                report.pos_id.ToString()
+                                                                                            },
+                                                                                            {
+                                                                                                "session_id",
+                                                                                                report.session_id
+                                                                                            },
+                                                                                            {"ts", report.ts},
+                                                                                            {"sig", report.sig},
+                                                                                        });
+
+
+                    result = System.Text.Encoding.Default.GetString(response);
+                    var start = result.IndexOf("<body>");
+                    var end = result.IndexOf("</body>");
+
+
+                    Response.Write(result.Substring(start, end - start));
+                }
+            }
+            catch (Exception ex)
+            {
+                Response.Write("wyjatek: " + ex.Message);
+            }
+
+            //Response.Write("OK");
 
             //Response.Write(string.Format("pos_id: {0},session_id: {1},ts: {2} <br />",report.pos_id,report.session_id, report.ts));
             ////Response.Write(report.sig);
@@ -148,7 +182,7 @@ namespace Valkir.Poc.PayU.Web.Controllers
             //    result = System.Text.Encoding.Default.GetString(response);
             //    var start = result.IndexOf("<body>");
             //    var end = result.IndexOf("</body>");
-          
+
 
             //    Response.Write(result.Substring(start, end - start));
             //}
