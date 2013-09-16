@@ -121,8 +121,11 @@ namespace Valkir.Poc.PayU.Web.Controllers
 
         public void Report(PayUReport report)
         {
-            throw new Exception(string.Format("{0}{1}",report.pos_id,report.session_id));
+            Response.Write("OK");
+            //throw new Exception(string.Format("{0}{1}",report.pos_id,report.session_id));
+            
             // throw new Exception("wiel błond");
+            
             // Response.Write(string.Format("I have recived report for {0} and {1}", report.pos_id, report.session_id));
         }
     }
