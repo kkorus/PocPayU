@@ -151,16 +151,18 @@ namespace Valkir.Poc.PayU.Web.Controllers
 
 
                     result = System.Text.Encoding.Default.GetString(response);
-                    var start = result.IndexOf("<body>");
-                    var end = result.IndexOf("</body>");
+                    //var start = result.IndexOf("<body>");
+                    //var end = result.IndexOf("</body>");
 
 
-                    Response.Write(result.Substring(start, end - start));
+                    //Response.Write(result.Substring(start, end - start));
+
+                    Response.Write(result);
                 }
             }
             catch (Exception ex)
             {
-                Response.Write("wyjatek: " + ex.Message);
+                Response.Write(ex.Message);
             }
 
             //Response.Write("OK");
