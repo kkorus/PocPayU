@@ -10,17 +10,22 @@ namespace Valkir.Poc.PayU.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly string _payUApiUrl;
         private readonly string _newPaymentURI;
         private readonly string _payUUrl;
-        private readonly string _encoding;
+        private readonly string _encoding;     
+   
+        private readonly string _key1;
+        private readonly string _key2;
 
         public HomeController()
         {
-            _payUApiUrl = ConfigurationManager.AppSettings["PayUApiUrl"];
             _newPaymentURI = ConfigurationManager.AppSettings["NewPaymentURI"];
             _payUUrl = ConfigurationManager.AppSettings["PayU"];
             _encoding = ConfigurationManager.AppSettings["Encoding"];
+
+            _key1 = ConfigurationManager.AppSettings["key1"];
+            _key2 = ConfigurationManager.AppSettings["key2"];
+
         }
 
         public ActionResult Index()
@@ -126,17 +131,28 @@ namespace Valkir.Poc.PayU.Web.Controllers
             return Helper.GetMd5Hash(toHash);
         }
 
+
+
         public void Report(PayUReport report)
         {
+            //sig = md5 ( pos_id + session_id + ts + key2 )
+            var sig = Helper.GetMd5Hash(string.Format("{0}{1}{2}{3}", report.pos_id, report.session_id, report.ts, _key2));
+            if (sig != report.sig)
+            {
+                throw new Exception("zly sig");
+            }
 
-
+            // steps
+            // 1. Check if sig is valid
+            // 2. If valid ask for status
+            // 3. Response: OK
             try
             {
 
                 var key1 = "c298b3de693686bee1318145269a91d7";
                 // sig = md5 ( pos_id + session_id + ts + key1 )
                 var toHash = string.Format("{0}{1}{2}{3}", report.pos_id, report.session_id, report.ts, key1);
-                var sig = Helper.GetMd5Hash(toHash);
+                sig = Helper.GetMd5Hash(toHash);
 
                 var result = "";
                 using (WebClient client = new WebClient())
