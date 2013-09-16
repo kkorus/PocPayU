@@ -11,14 +11,16 @@ namespace Valkir.Poc.PayU.Web.Controllers
     public class HomeController : Controller
     {
         private readonly string _payUApiUrl;
-        private readonly string _newPaymentUrl;
+        private readonly string _newPaymentURI;
         private readonly string _payUUrl;
+        private readonly string _encoding;
 
         public HomeController()
         {
             _payUApiUrl = ConfigurationManager.AppSettings["PayUApiUrl"];
-            _newPaymentUrl = ConfigurationManager.AppSettings["NewPaymentUrl"];
+            _newPaymentURI = ConfigurationManager.AppSettings["NewPaymentUrl"];
             _payUUrl = ConfigurationManager.AppSettings["PayU"];
+            _encoding = ConfigurationManager.AppSettings["Encoding"];
         }
 
         public ActionResult Index()
@@ -56,7 +58,8 @@ namespace Valkir.Poc.PayU.Web.Controllers
         {
             Response.Clear();
 
-            var result = Helper.PreparePOSTForm(_newPaymentUrl, new NameValueCollection()
+            var url = string.Format("{0}{1}", _payUUrl, _newPaymentURI);
+            var result = Helper.PreparePOSTForm(url, new NameValueCollection()
                                                                         {
                                                                             {"pos_id", payment.PosId.ToString()},
                                                                             {"pay_type", ""},
@@ -131,7 +134,8 @@ namespace Valkir.Poc.PayU.Web.Controllers
                 using (WebClient client = new WebClient())
                 {
 
-                    byte[] response = client.UploadValues(_payUUrl + "Payment/get", new NameValueCollection()
+                    var url = string.Format("{0}{1}",_payUUrl,_encoding);
+                    byte[] response = client.UploadValues(url + "/Payment/get", new NameValueCollection()
                                                                                         {
                                                                                             {
                                                                                                 "pos_id",
