@@ -181,7 +181,7 @@ namespace Valkir.Poc.PayU.Web.Controllers
 
                     //Response.Write(result.Substring(start, end - start));
 
-                    Response.Write(result);
+                    //Response.Write(result);
                 }
             }
             catch (Exception ex)
@@ -189,7 +189,7 @@ namespace Valkir.Poc.PayU.Web.Controllers
                 Response.Write(ex.Message);
             }
 
-            //Response.Write("OK");
+            Response.Write("OK");
 
             //Response.Write(string.Format("pos_id: {0},session_id: {1},ts: {2} <br />",report.pos_id,report.session_id, report.ts));
             ////Response.Write(report.sig);
