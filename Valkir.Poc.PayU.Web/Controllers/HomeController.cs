@@ -143,9 +143,14 @@ namespace Valkir.Poc.PayU.Web.Controllers
                                                                                            {"ts", report.ts},
                                                                                            {"sig", report.sig},
                                                                                        });
-                result = System.Text.Encoding.Default.GetString(response);
 
-                Response.Write(result);
+
+                result = System.Text.Encoding.Default.GetString(response);
+                var start = result.IndexOf("<body>");
+                var end = result.IndexOf("</body>");
+          
+
+                Response.Write(result.Substring(start, end - start));
             }
 
         }
