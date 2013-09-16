@@ -121,6 +121,7 @@ namespace Valkir.Poc.PayU.Web.Controllers
 
         public void Report(PayUReport report)
         {
+            Response.Write(report.pos_id);
             Response.Write("OK");
             //throw new Exception(string.Format("{0}{1}",report.pos_id,report.session_id));
             
