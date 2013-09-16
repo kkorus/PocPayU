@@ -18,7 +18,7 @@ namespace Valkir.Poc.PayU.Web.Controllers
         public HomeController()
         {
             _payUApiUrl = ConfigurationManager.AppSettings["PayUApiUrl"];
-            _newPaymentURI = ConfigurationManager.AppSettings["NewPaymentUrl"];
+            _newPaymentURI = ConfigurationManager.AppSettings["NewPaymentURI"];
             _payUUrl = ConfigurationManager.AppSettings["PayU"];
             _encoding = ConfigurationManager.AppSettings["Encoding"];
         }
@@ -58,7 +58,7 @@ namespace Valkir.Poc.PayU.Web.Controllers
         {
             Response.Clear();
 
-            var url = string.Format("{0}{1}", _payUUrl, _newPaymentURI);
+            var url = string.Format("{0}/{1}/{2}", _payUUrl, _encoding,_newPaymentURI);
             var result = Helper.PreparePOSTForm(url, new NameValueCollection()
                                                                         {
                                                                             {"pos_id", payment.PosId.ToString()},
@@ -134,7 +134,7 @@ namespace Valkir.Poc.PayU.Web.Controllers
                 using (WebClient client = new WebClient())
                 {
 
-                    var url = string.Format("{0}{1}",_payUUrl,_encoding);
+                    var url = string.Format("{0}/{1}",_payUUrl,_encoding);
                     byte[] response = client.UploadValues(url + "/Payment/get", new NameValueCollection()
                                                                                         {
                                                                                             {
