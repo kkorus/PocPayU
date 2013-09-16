@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Net;
 using System.Web.Mvc;
 using RestSharp;
 using Valkir.Poc.PayU.Web.Models;
@@ -129,56 +130,21 @@ namespace Valkir.Poc.PayU.Web.Controllers
 
             // Payment/get
 
-            var client = new RestClient(_payUApiUrl);
+            var result = "";
+            using (WebClient client = new WebClient())
+            {
 
-            var request = new RestRequest("Payment/get", Method.POST);
+                byte[] response = client.UploadValues(_payUApiUrl + "Payment/get", new NameValueCollection()
+                                                                                       {
+                                                                                           {"pos_id", report.pos_id.ToString()},
+                                                                                           {"session_id", report.session_id},
+                                                                                           {"ts", report.ts},
+                                                                                           {"sig", report.sig},
+                                                                                       });
+                result = System.Text.Encoding.Default.GetString(response);
 
-            request.AddParameter("pos_id", report.pos_id);
-            request.AddParameter("session_id", report.session_id);
-            request.AddParameter("ts", report.ts);
-            request.AddParameter("sig", report.session_id);
-
-            //MapParameters(request, payment);
-
-            var response = client.Execute(request);
-            var content = response.Content; // raw content as string
-
-            Response.Write(content);
-
-            // System.IO.File.WriteAllText(string.Format("{0}/result.txt", Directory.GetCurrentDirectory()), content);
-
-            //request.AddParameter("name", "value"); // adds to POST or URL querystring based on Method
-            //request.AddUrlSegment("id", "123"); // replaces matching token in request.Resource
-
-            // easily add HTTP Headers
-            //request.AddHeader("header", "value");
-
-            // add files to upload (works with compatible verbs)
-            //request.AddFile(path);
-
-            // execute the request
-            //RestResponse response = client.Execute(request);
-            //var content = response.Content; // raw content as string
-
-            //// or automatically deserialize result
-            //// return content type is sniffed but can be explicitly set via RestClient.AddHandler();
-            //RestResponse<Payment> response2 = client.Execute<Payment>(request);
-            //var name = response2.Data.FirstName;
-
-            //// easy async support
-            //client.ExecuteAsync(request, response =>
-            //{
-            //    Console.WriteLine(response.Content);
-            //});
-
-            //// async with deserialization
-            //var asyncHandle = client.ExecuteAsync<Payment>(request, response =>
-            //{
-            //    Console.WriteLine(response.Data.LastName);
-            //});
-
-            //// abort the request on demand
-            //asyncHandle.Abort();
+                Response.Write(result);
+            }
 
         }
     }
