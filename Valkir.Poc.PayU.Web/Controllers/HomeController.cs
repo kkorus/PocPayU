@@ -12,11 +12,13 @@ namespace Valkir.Poc.PayU.Web.Controllers
     {
         private readonly string _payUApiUrl;
         private readonly string _newPaymentUrl;
+        private readonly string _payUUrl;
 
         public HomeController()
         {
             _payUApiUrl = ConfigurationManager.AppSettings["PayUApiUrl"];
             _newPaymentUrl = ConfigurationManager.AppSettings["NewPaymentUrl"];
+            _payUUrl = ConfigurationManager.AppSettings["PayU"];
         }
 
         public ActionResult Index()
@@ -134,7 +136,7 @@ namespace Valkir.Poc.PayU.Web.Controllers
             using (WebClient client = new WebClient())
             {
 
-                byte[] response = client.UploadValues(_payUApiUrl + "Payment/get", new NameValueCollection()
+                byte[] response = client.UploadValues(_payUUrl + "Payment/get", new NameValueCollection()
                                                                                        {
                                                                                            {"pos_id", report.pos_id.ToString()},
                                                                                            {"session_id", report.session_id},
