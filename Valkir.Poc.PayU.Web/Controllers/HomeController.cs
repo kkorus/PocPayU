@@ -128,6 +128,11 @@ namespace Valkir.Poc.PayU.Web.Controllers
 
         public void Report(PayUReport report)
         {
+            var key1 = "c298b3de693686bee1318145269a91d7";
+            // sig = md5 ( pos_id + session_id + ts + key1 )
+            var toHash = string.Format("{0}{1}{2}{3}", report.pos_id, report.session_id, report.ts, key1);
+            var sig = Helper.GetMd5Hash(toHash);
+
             try
             {
                 var result = "";
@@ -145,8 +150,8 @@ namespace Valkir.Poc.PayU.Web.Controllers
                                                                                                 "session_id",
                                                                                                 report.session_id
                                                                                             },
-                                                                                            {"ts", 20.ToString()},
-                                                                                            {"sig", report.sig},
+                                                                                            {"ts", report.ts},
+                                                                                            {"sig", sig},
                                                                                         });
 
 
