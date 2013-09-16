@@ -9,7 +9,7 @@ namespace Valkir.Poc.PayU.Web.Models
     {
         public int pos_id { get; set; }
         public string session_id { get; set; }
-        public int ts { get; set; }
+        public string ts { get; set; }
         public string sig { get; set; }
     }
 }
