@@ -143,6 +143,7 @@ namespace Valkir.Poc.PayU.Web.Controllers
                 var ts = PayUHelper.TS.ToString();
                 sig = PayUHelper.GetSig(report.pos_id.ToString(), report.session_id, ts, _key1);
 
+                // get
                 using (var client = new WebClient())
                 {
                     var url = string.Format("{0}/{1}", _payUUrl, _encoding);
@@ -164,6 +165,30 @@ namespace Valkir.Poc.PayU.Web.Controllers
                                                    });
 
                 }
+
+                // confirm
+                using (var client = new WebClient())
+                {
+                    var url = string.Format("{0}/{1}", _payUUrl, _encoding);
+                    byte[] response = client.UploadValues(url + "/Payment/confirm", new NameValueCollection()
+                                                                                    {
+                                                                                        {"pos_id",report.pos_id.ToString()},
+                                                                                        { "session_id",report.session_id },
+                                                                                        {"ts", ts},
+                                                                                        {"sig", sig},
+                                                                                    });
+
+                    var xmlResult = System.Text.Encoding.Default.GetString(response);
+
+                    // stroe xml in db
+                    db.Insert("reports", "id", new Report
+                    {
+                        Date = DateTime.Now,
+                        XmlReport = xmlResult
+                    });
+
+                }
+
             }
             catch (Exception ex)
             {
