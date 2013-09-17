@@ -137,6 +137,8 @@ namespace Valkir.Poc.PayU.Web.Controllers
 
             try
             {
+                var db = new PetaPoco.Database("appHarbor");
+
                 // sig = md5 ( pos_id + session_id + ts + key1 )
                 var ts = PayUHelper.TS.ToString();
                 sig = PayUHelper.GetSig(report.pos_id.ToString(), report.session_id, ts, _key1);
@@ -155,11 +157,23 @@ namespace Valkir.Poc.PayU.Web.Controllers
                     var xmlResult = System.Text.Encoding.Default.GetString(response);
 
                     // stroe xml in db
+                    db.Insert("reports", "id", new Report
+                                                   {
+                                                       Date = DateTime.Now,
+                                                       XmlReport = xmlResult
+                                                   });
 
                 }
             }
             catch (Exception ex)
             {
+                var db = new PetaPoco.Database("appHarbor");
+                db.Insert("reports", "id", new Report
+                                               {
+                                                   Date = DateTime.Now,
+                                                   XmlReport = ex.Message
+                                               });
+
                 Response.Write(ex.Message);
             }
 
@@ -167,6 +181,7 @@ namespace Valkir.Poc.PayU.Web.Controllers
         }
 
         [HttpGet]
+        // http://pocpayu.apphb.com/home/UrlPositive?transId=%transId%&posId=%posId%&payType=%payType%&sessionId=%sessionId%&amountPS=%amountPS%&amountCS=%amountCS%&orderId=%orderId%&error=%error%
         public void UrlPositive(string posId, string sessionId, string payType, string transId, string amountPS, string amountCS, string orderId, string error)
         {
             Response.Write("posId: " + posId);

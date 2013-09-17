@@ -49,7 +49,7 @@ namespace Valkir.Poc.PayU.Web
 
                 for (var i = 0; i < data.Length; i++)
                 {
-                    sBuilder.Append(data[i].ToString("X2"));
+                    sBuilder.Append(data[i].ToString("x2"));
                 }
 
                 return sBuilder.ToString();
