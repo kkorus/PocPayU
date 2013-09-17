@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Valkir.Poc.PayU.Web
 {
-    public class Helper
+    public class PayUHelper
     {
         /// <summary>
         /// This method prepares an Html form which holds all data in hidden field in the addetion to form submitting script.
@@ -41,19 +41,46 @@ namespace Valkir.Poc.PayU.Web
 
         public static string GetMd5Hash(string input)
         {
-            using (MD5 md5Hash = MD5.Create())
+            using (var md5Hash = MD5.Create())
             {
-                byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+                var data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
 
-                StringBuilder sBuilder = new StringBuilder();
+                var sBuilder = new StringBuilder();
 
-                for (int i = 0; i < data.Length; i++)
+                for (var i = 0; i < data.Length; i++)
                 {
-                    sBuilder.Append(data[i].ToString("x2"));
+                    sBuilder.Append(data[i].ToString("X2"));
                 }
 
                 return sBuilder.ToString();
             }
+        }
+
+        public static int TS
+        {
+            get
+            {
+                var ts = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                return (int)ts.TotalSeconds;
+            }
+        }
+
+        public static string GetSig(string input, string ts, string key)
+        {
+            var toHash = string.Format("{0}{1}{2}", input, ts, key);
+            return GetMd5Hash(toHash);
+        }
+
+        public static string GetSig(params string[] inputs)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var input in inputs)
+            {
+                sb.Append(input);
+            }
+
+            return GetMd5Hash(sb.ToString());
         }
     }
 }

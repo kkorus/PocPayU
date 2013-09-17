@@ -144,7 +144,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helper.cs" />
+    <Compile Include="PayUHelper.cs" />
     <Compile Include="Models\Payment.cs" />
     <Compile Include="Models\PayUReport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

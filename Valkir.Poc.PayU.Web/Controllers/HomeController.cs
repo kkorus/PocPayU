@@ -3,7 +3,6 @@ using System.Collections.Specialized;
 using System.Configuration;
 using System.Net;
 using System.Web.Mvc;
-using RestSharp;
 using Valkir.Poc.PayU.Web.Models;
 
 namespace Valkir.Poc.PayU.Web.Controllers
@@ -12,8 +11,8 @@ namespace Valkir.Poc.PayU.Web.Controllers
     {
         private readonly string _newPaymentURI;
         private readonly string _payUUrl;
-        private readonly string _encoding;     
-   
+        private readonly string _encoding;
+
         private readonly string _key1;
         private readonly string _key2;
 
@@ -63,8 +62,35 @@ namespace Valkir.Poc.PayU.Web.Controllers
         {
             Response.Clear();
 
-            var url = string.Format("{0}/{1}/{2}", _payUUrl, _encoding,_newPaymentURI);
-            var result = Helper.PreparePOSTForm(url, new NameValueCollection()
+            var url = string.Format("{0}/{1}/{2}", _payUUrl, _encoding, _newPaymentURI);
+            var ts = PayUHelper.TS.ToString();
+            var sig = PayUHelper.GetSig(payment.PosId.ToString(), // pos_id,
+                                        "", // pay_type
+                                        payment.SessionId,
+                                        payment.PosAuthKey,
+                                        payment.Amount.ToString(),
+                                        payment.Description,
+                                        "", // desc2
+                                        "", // trsDesc
+                                        payment.OrderId.ToString(),
+                                        payment.FirstName,
+                                        payment.LastName,
+                                        "", // payback_login
+                                        "",
+                                        "",
+                                        "",
+                                        "",
+                                        "",
+                                        "",
+                                        payment.Email,
+                                        "",
+                                        "",
+                                        payment.ClientIp,
+                                        ts,
+                                        _key1);
+
+
+            var result = PayUHelper.PreparePOSTForm(url, new NameValueCollection()
                                                                         {
                                                                             {"pos_id", payment.PosId.ToString()},
                                                                             {"pay_type", ""},
@@ -88,100 +114,48 @@ namespace Valkir.Poc.PayU.Web.Controllers
                                                                             {"phone", ""},
                                                                             {"language", ""},
                                                                             {"client_ip", payment.ClientIp},
-                                                                            {"ts", "20"},
-                                                                            {"sig", ComputeSig(payment)},
+                                                                            {"ts", ts},
+                                                                            {"sig", sig},
                                                                         });
             Response.Write(result);
             Response.End();
         }
 
-        private string ComputeSig(Payment payment)
-        {
-            //sig = md5 ( pos_id + pay_type + session_id + pos_auth_key + amount + desc + desc2 + trsDesc + order_id + first_name + last_name + payback_login + street + street_hn + street_an + city + post_code + country + email + phone + language + client_ip + ts + key1 )
-            var ts = 20;
-            var key1 = "c298b3de693686bee1318145269a91d7";
-            var toHash =
-                string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}{23}",
-                              payment.PosId, // pos_id,
-                              "", // pay_type
-                              payment.SessionId,
-                              payment.PosAuthKey,
-                              payment.Amount.ToString(),
-                              payment.Description,
-                              "", // desc2
-                              "", // trsDesc
-                              payment.OrderId.ToString(),
-                              payment.FirstName,
-                              payment.LastName,
-                              "", // payback_login
-                              "",
-                              "",
-                              "",
-                              "",
-                              "",
-                              "",
-                              payment.Email,
-                              "",
-                              "",
-                              payment.ClientIp,
-                              ts,
-                              key1
-                    );
-
-            return Helper.GetMd5Hash(toHash);
-        }
-
-
-
         public void Report(PayUReport report)
         {
-            //sig = md5 ( pos_id + session_id + ts + key2 )
-            var sig = Helper.GetMd5Hash(string.Format("{0}{1}{2}{3}", report.pos_id, report.session_id, report.ts, _key2));
-            if (sig != report.sig)
-            {
-                throw new Exception("zly sig");
-            }
-
             // steps
-            // 1. Check if sig is valid
+            // 1. Check if report sig is valid
             // 2. If valid ask for status
             // 3. Response: OK
+
+            // sig = md5 ( pos_id + session_id + ts + key2 )
+            var sig = PayUHelper.GetSig(report.pos_id.ToString(), report.session_id, report.ts, _key2);
+            if (sig != report.sig)
+            {
+                throw new Exception("Wrong sig!");
+            }
+
             try
             {
-
-                var key1 = "c298b3de693686bee1318145269a91d7";
                 // sig = md5 ( pos_id + session_id + ts + key1 )
-                var toHash = string.Format("{0}{1}{2}{3}", report.pos_id, report.session_id, report.ts, key1);
-                sig = Helper.GetMd5Hash(toHash);
+                var ts = PayUHelper.TS.ToString();
+                sig = PayUHelper.GetSig(report.pos_id.ToString(), report.session_id, ts, _key1);
 
-                var result = "";
-                using (WebClient client = new WebClient())
+                using (var client = new WebClient())
                 {
-
-                    var url = string.Format("{0}/{1}",_payUUrl,_encoding);
+                    var url = string.Format("{0}/{1}", _payUUrl, _encoding);
                     byte[] response = client.UploadValues(url + "/Payment/get", new NameValueCollection()
-                                                                                        {
-                                                                                            {
-                                                                                                "pos_id",
-                                                                                                report.pos_id.ToString()
-                                                                                            },
-                                                                                            {
-                                                                                                "session_id",
-                                                                                                report.session_id
-                                                                                            },
-                                                                                            {"ts", report.ts},
-                                                                                            {"sig", sig},
-                                                                                        });
+                                                                                    {
+                                                                                        {"pos_id",report.pos_id.ToString()},
+                                                                                        { "session_id",report.session_id },
+                                                                                        {"ts", ts},
+                                                                                        {"sig", sig},
+                                                                                    });
 
+                    var xmlResult = System.Text.Encoding.Default.GetString(response);
 
-                    result = System.Text.Encoding.Default.GetString(response);
-                    //var start = result.IndexOf("<body>");
-                    //var end = result.IndexOf("</body>");
+                    // stroe xml in db
 
-
-                    //Response.Write(result.Substring(start, end - start));
-
-                    //Response.Write(result);
                 }
             }
             catch (Exception ex)
@@ -190,33 +164,32 @@ namespace Valkir.Poc.PayU.Web.Controllers
             }
 
             Response.Write("OK");
+        }
 
-            //Response.Write(string.Format("pos_id: {0},session_id: {1},ts: {2} <br />",report.pos_id,report.session_id, report.ts));
-            ////Response.Write(report.sig);
+        [HttpGet]
+        public void UrlPositive(string posId, string sessionId, string payType, string transId, string amountPS, string amountCS, string orderId, string error)
+        {
+            Response.Write("posId: " + posId);
+            Response.Write("sessionId: " + sessionId);
+            Response.Write("payType: " + payType);
+            Response.Write("transId: " + transId);
+            Response.Write("amountPS: " + amountPS);
+            Response.Write("amountCS: " + amountCS);
+            Response.Write("orderId: " + orderId);
+            Response.Write("error: " + error);
+        }
 
-            //// Payment/get
-
-            //var result = "";
-            //using (WebClient client = new WebClient())
-            //{
-
-            //    byte[] response = client.UploadValues(_payUUrl + "Payment/get", new NameValueCollection()
-            //                                                                           {
-            //                                                                               {"pos_id", report.pos_id.ToString()},
-            //                                                                               {"session_id", report.session_id},
-            //                                                                               {"ts", report.ts},
-            //                                                                               {"sig", report.sig},
-            //                                                                           });
-
-
-            //    result = System.Text.Encoding.Default.GetString(response);
-            //    var start = result.IndexOf("<body>");
-            //    var end = result.IndexOf("</body>");
-
-
-            //    Response.Write(result.Substring(start, end - start));
-            //}
-
+        [HttpGet]
+        public void UrlNegative(string posId, string sessionId, string payType, string transId, string amountPS, string amountCS, string orderId, string error)
+        {
+            Response.Write("posId: " + posId);
+            Response.Write("sessionId: " + sessionId);
+            Response.Write("payType: " + payType);
+            Response.Write("transId: " + transId);
+            Response.Write("amountPS: " + amountPS);
+            Response.Write("amountCS: " + amountCS);
+            Response.Write("orderId: " + orderId);
+            Response.Write("error: " + error);
         }
     }
 }
