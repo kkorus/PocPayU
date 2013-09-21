@@ -199,7 +199,7 @@ namespace Valkir.Poc.PayU.Web.Controllers
 
         [HttpGet]
         // http://pocpayu.apphb.com/home/UrlPositive?transId=%transId%&posId=%posId%&payType=%payType%&sessionId=%sessionId%&amountPS=%amountPS%&amountCS=%amountCS%&orderId=%orderId%&error=%error%
-        public void Error(string posId, string sessionId, string payType, string transId, string amountPS, string amountCS, string orderId, string error)
+        public void Url(string posId, string sessionId, string payType, string transId, string amountPS, string amountCS, string orderId, string error)
         {
 
             Response.Write("bad: " + error);

@@ -18,6 +18,12 @@ namespace Valkir.Poc.PayU.Web
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+
+            routes.MapRoute(
+                name: "payU",
+                url: "{controller}/Error/{id}",
+                defaults: new {controller = "Home", action = "Url", id = UrlParameter.Optional}
+                );
         }
     }
 }
