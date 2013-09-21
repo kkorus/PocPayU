@@ -45,7 +45,7 @@ namespace Valkir.Poc.PayU.Web.Controllers
                                   Email = "jkowalski@onet.pl",
                                   OrderId = new Random().Next(1,100000000),
                                   Description = "Nowy przedmiot." + new Random().Next(1,100000).ToString(),
-                                  SessionId = Session.SessionID,
+                                  SessionId = new Random().Next(1,100000).ToString(),//Session.SessionID,
                                   Amount = 999,
                                   ClientIp = System.Web.HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"]
                               };
@@ -199,7 +199,7 @@ namespace Valkir.Poc.PayU.Web.Controllers
 
         [HttpGet]
         // http://pocpayu.apphb.com/home/UrlPositive?transId=%transId%&posId=%posId%&payType=%payType%&sessionId=%sessionId%&amountPS=%amountPS%&amountCS=%amountCS%&orderId=%orderId%&error=%error%
-        public void Url(string posId, string sessionId, string payType, string transId, string amountPS, string amountCS, string orderId, string error)
+        public void Error(string posId, string sessionId, string payType, string transId, string amountPS, string amountCS, string orderId, string error)
         {
 
             Response.Write("bad: " + error);
