@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
 using Valkir.Poc.PayU.Web.Models;
 
@@ -39,8 +40,8 @@ namespace Valkir.Poc.PayU.Web.Controllers
                               {
                                   PosId = Convert.ToInt32(ConfigurationManager.AppSettings["pos_id"]),
                                   PosAuthKey = ConfigurationManager.AppSettings["pos_auth_key"],
-                                  FirstName = "Jan",
-                                  LastName = "Kowlaski",
+                                  FirstName = "",
+                                  LastName = "",
                                   Email = "jkowalski@onet.pl",
                                   OrderId = 123,
                                   Description = "Nowy przedmiot",
@@ -55,6 +56,8 @@ namespace Valkir.Poc.PayU.Web.Controllers
         [HttpPost]
         public void Payment(Payment payment)
         {
+            var t = HttpContext.Request.UserHostAddress;
+
             ExecutePayment(payment);
         }
 
@@ -149,8 +152,13 @@ namespace Valkir.Poc.PayU.Web.Controllers
                     var url = string.Format("{0}/{1}", _payUUrl, _encoding);
                     byte[] response = client.UploadValues(url + "/Payment/get", new NameValueCollection()
                                                                                     {
-                                                                                        {"pos_id",report.pos_id.ToString()},
-                                                                                        { "session_id",report.session_id },
+                                                                                        {
+                                                                                            "pos_id",
+                                                                                            report.pos_id.ToString()
+                                                                                        },
+                                                                                        {
+                                                                                            "session_id", report.session_id
+                                                                                        },
                                                                                         {"ts", ts},
                                                                                         {"sig", sig},
                                                                                     });
@@ -180,6 +188,23 @@ namespace Valkir.Poc.PayU.Web.Controllers
 
             Response.Write("OK");
         }
+
+        [HttpGet]
+        // http://pocpayu.apphb.com/home/UrlPositive?transId=%transId%&posId=%posId%&payType=%payType%&sessionId=%sessionId%&amountPS=%amountPS%&amountCS=%amountCS%&orderId=%orderId%&error=%error%
+        public void Url(string posId, string sessionId, string payType, string transId, string amountPS, string amountCS, string orderId)
+        {
+            Response.Write("OK: " + posId);
+
+        }
+
+        [HttpGet]
+        // http://pocpayu.apphb.com/home/UrlPositive?transId=%transId%&posId=%posId%&payType=%payType%&sessionId=%sessionId%&amountPS=%amountPS%&amountCS=%amountCS%&orderId=%orderId%&error=%error%
+        public void Url(string posId, string sessionId, string payType, string transId, string amountPS, string amountCS, string orderId, string error)
+        {
+
+            Response.Write("bad: " + error);
+        }
+
 
         [HttpGet]
         // http://pocpayu.apphb.com/home/UrlPositive?transId=%transId%&posId=%posId%&payType=%payType%&sessionId=%sessionId%&amountPS=%amountPS%&amountCS=%amountCS%&orderId=%orderId%&error=%error%
