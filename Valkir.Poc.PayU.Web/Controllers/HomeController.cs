@@ -40,11 +40,11 @@ namespace Valkir.Poc.PayU.Web.Controllers
                               {
                                   PosId = Convert.ToInt32(ConfigurationManager.AppSettings["pos_id"]),
                                   PosAuthKey = ConfigurationManager.AppSettings["pos_auth_key"],
-                                  FirstName = "",
-                                  LastName = "",
+                                  //FirstName = "",
+                                  //LastName = "",
                                   Email = "jkowalski@onet.pl",
-                                  OrderId = 123,
-                                  Description = "Nowy przedmiot",
+                                  OrderId = new Random().Next(1,100000000),
+                                  Description = "Nowy przedmiot." + new Random().Next(1,100000).ToString(),
                                   SessionId = Session.SessionID,
                                   Amount = 999,
                                   ClientIp = System.Web.HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"]
@@ -76,8 +76,8 @@ namespace Valkir.Poc.PayU.Web.Controllers
                                         "", // desc2
                                         "", // trsDesc
                                         payment.OrderId.ToString(),
-                                        payment.FirstName,
-                                        payment.LastName,
+                                        "",
+                                        "",
                                         "", // payback_login
                                         "",
                                         "",
@@ -104,8 +104,8 @@ namespace Valkir.Poc.PayU.Web.Controllers
                                                                             {"desc2", ""},
                                                                             {"trsDesc", ""},
                                                                             {"order_id", payment.OrderId.ToString()},
-                                                                            {"first_name", payment.FirstName},
-                                                                            {"last_name", payment.LastName},
+                                                                            {"first_name", ""},
+                                                                            {"last_name", ""},
                                                                             {"payback_login", ""},
                                                                             {"street", ""},
                                                                             {"street_hn", ""},
