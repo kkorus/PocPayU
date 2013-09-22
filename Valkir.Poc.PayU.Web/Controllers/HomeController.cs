@@ -189,35 +189,13 @@ namespace Valkir.Poc.PayU.Web.Controllers
             Response.Write("OK");
         }
 
-        [HttpGet]
-        // http://pocpayu.apphb.com/home/UrlPositive?transId=%transId%&posId=%posId%&payType=%payType%&sessionId=%sessionId%&amountPS=%amountPS%&amountCS=%amountCS%&orderId=%orderId%&error=%error%
-        public void Url(string posId, string sessionId, string payType, string transId, string amountPS, string amountCS, string orderId)
-        {
-            Response.Write("OK: " + posId);
-
-        }
 
         [HttpGet]
         // http://pocpayu.apphb.com/home/UrlPositive?transId=%transId%&posId=%posId%&payType=%payType%&sessionId=%sessionId%&amountPS=%amountPS%&amountCS=%amountCS%&orderId=%orderId%&error=%error%
-        public void Url(string posId, string sessionId, string payType, string transId, string amountPS, string amountCS, string orderId, string error)
+        public void UrlPositive(PayUResponse response)
+        //public void UrlPositive(string posId, string sessionId, string payType, string transId, string amountPS, string amountCS, string orderId, string error)
         {
-
-            Response.Write("bad: " + error);
-        }
-
-
-        [HttpGet]
-        // http://pocpayu.apphb.com/home/UrlPositive?transId=%transId%&posId=%posId%&payType=%payType%&sessionId=%sessionId%&amountPS=%amountPS%&amountCS=%amountCS%&orderId=%orderId%&error=%error%
-        public void UrlPositive(string posId, string sessionId, string payType, string transId, string amountPS, string amountCS, string orderId, string error)
-        {
-            Response.Write("posId: " + posId);
-            Response.Write("sessionId: " + sessionId);
-            Response.Write("payType: " + payType);
-            Response.Write("transId: " + transId);
-            Response.Write("amountPS: " + amountPS);
-            Response.Write("amountCS: " + amountCS);
-            Response.Write("orderId: " + orderId);
-            Response.Write("error: " + error);
+            Response.Write("posId: " + response.PosId);
         }
 
         [HttpGet]
@@ -232,5 +210,17 @@ namespace Valkir.Poc.PayU.Web.Controllers
             Response.Write("orderId: " + orderId);
             Response.Write("error: " + error);
         }
+    }
+
+    public class PayUResponse
+    {
+        public string PosId { get; set; }
+        public string SessionId { get; set; }
+        public string PayType { get; set; }
+        public string TransId { get; set; }
+        public string AmountPS { get; set; }
+        public string AmountCS { get; set; }
+        public string OrderId { get; set; }
+        public string Error { get; set; }
     }
 }
